@@ -105,6 +105,11 @@ public:
   ROS2Visualizer(std::shared_ptr<rclcpp::Node> node, std::shared_ptr<VioManager> app, std::shared_ptr<Simulator> sim = nullptr);
 
   /**
+   * @brief Destructor to ensure proper cleanup of ROS 2 resources
+   */
+  ~ROS2Visualizer();
+
+  /**
    * @brief Will setup ROS subscribers and callbacks
    * @param parser Configuration file parser
    */
@@ -198,6 +203,8 @@ protected:
 
   // Thread atomics
   std::atomic<bool> thread_update_running;
+  std::atomic<bool> run_visualize_thread;
+  std::shared_ptr<std::thread> thread_visualize;
 
   /// Queue up camera measurements sorted by time and trigger once we have
   /// exactly one IMU measurement with timestamp newer than the camera measurement
