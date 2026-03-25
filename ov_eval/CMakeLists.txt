@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.3)
 project(ov_eval)
 
 # Include libraries
-find_package(Eigen3 3.4.0 REQUIRED)
+find_package(Eigen3 REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system filesystem thread date_time)
 message(STATUS "EIGEN: " ${Eigen3_VERSION} " | BOOST: " ${Boost_VERSION})
 

@@ -25,6 +25,7 @@ endif ()
 include_directories(
         src
         ${EIGEN3_INCLUDE_DIRS}
+        ${EIGEN3_INCLUDE_DIR}
         ${Boost_INCLUDE_DIRS}
         ${CERES_INCLUDE_DIRS}
         ${catkin_INCLUDE_DIRS}
