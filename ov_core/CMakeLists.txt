@@ -3,13 +3,13 @@ project(ov_core)
 
 # Include libraries (if we don't have opencv 4, then fallback to opencv 3)
 # The OpenCV version needs to match the one used by cv_bridge otherwise you will get a segmentation fault!
-find_package(Eigen3 REQUIRED)
+find_package(Eigen3 3.4.0 REQUIRED)
 find_package(OpenCV 3 QUIET)
 if (NOT OpenCV_FOUND)
     find_package(OpenCV 4 REQUIRED)
 endif ()
 find_package(Boost REQUIRED COMPONENTS system filesystem thread date_time)
-message(STATUS "OPENCV: " ${OpenCV_VERSION} " | BOOST: " ${Boost_VERSION})
+message(STATUS "EIGEN: " ${Eigen3_VERSION} " | OPENCV: " ${OpenCV_VERSION} " | BOOST: " ${Boost_VERSION})
 
 # By default we build with ROS, but you can disable this and just build as a library
 option(ENABLE_ROS "Enable or disable building with ROS (if it is found)" ON)

@@ -24,7 +24,7 @@ add_definitions(-DROS_AVAILABLE=2)
 # Include our header files
 include_directories(
         src
-        ${EIGEN3_INCLUDE_DIR}
+        ${EIGEN3_INCLUDE_DIRS}
         ${Boost_INCLUDE_DIRS}
         ${CERES_INCLUDE_DIRS}
 )
