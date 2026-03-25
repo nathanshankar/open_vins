@@ -1,38 +1,85 @@
 %YAML:1.0
 
+# Calibration data for a stereo camera system with an IMU
+
+#----------------------------------------------------------------------------------------
+# Camera 0 (left_ir)
+#----------------------------------------------------------------------------------------
 cam0:
+  # Transformation from camera 0 (left_ir) frame to IMU frame (T_cam_imu)
+  # This matrix transforms points from the camera frame to the IMU frame.
   T_cam_imu:
-    - [0.9999942992129773, -0.0006837030318090254, 0.003306673813320594, 0.01734357246126995]
-    - [0.0006819183997666188, 0.9999996212593953, 0.000540803438387852, -0.008519633421954392]
-    - [-0.003307042309899398, -0.0005385454736672996, 0.9999943867042107, -0.018723905687986195]
+    - [1.000, 0.000, 0.000, 0.030]
+    - [0.000, 1.000, 0.000, -0.007]
+    - [0.000, 0.000, 1.000, -0.016]
     - [0.0, 0.0, 0.0, 1.0]
+  
+  # List of camera IDs this camera overlaps with (e.g., for stereo pairs)
   cam_overlaps: [1]
+  
+  # Camera model type (e.g., pinhole, fisheye)
   camera_model: pinhole
-  distortion_coeffs: [0.0019712980218442736, -0.0011090942743057983, -0.0006211171700097682, -0.0034327653409294196]
+  
+  # Distortion coefficients for the specified distortion model (updated from _d)
+  distortion_coeffs: [0.0, 0.0, 0.0, 0.0, 0.0]
+  
+  # Distortion model (keeping as radtan, but coefficients are zero)
   distortion_model: radtan
-  intrinsics: [320.17488748238287, 320.0283628174116, 314.0668795454674, 180.36893447271257]
-  resolution: [640, 360]
-  rostopic: /camera/infra1/image_rect_raw
+  
+  # Intrinsic camera parameters [fx, fy, cx, cy] (updated from _k)
+  intrinsics: [427.10791015625, 427.10791015625, 420.49163818359375, 239.6645050048828]
+  
+  # Image resolution [width, height] (retained from original)
+  resolution: [640, 480]
+  
+  # ROS topic for this camera's rectified images (retained from original)
+  rostopic: /camera/left/image_rect
+  
+  # Time offset between camera and IMU measurements (camera_timestamp - imu_timestamp) (retained from original)
   timeshift_cam_imu: 0.004639958649183853
 
+#----------------------------------------------------------------------------------------
+# Camera 1 (right_ir)
+#----------------------------------------------------------------------------------------
 cam1:
+  # Transformation from camera 1 (right_ir) frame to IMU frame (T_cam_imu)
+  # This matrix transforms points from the camera frame to the IMU frame.
   T_cam_imu:
-    - [0.9999855287596171, -0.0003605813977934117, 0.00536770457504073, -0.07667191595392714]
-    - [0.000365189906339375, 0.9999995655732808, -0.0008576068926449692, -0.008542662389807396]
-    - [-0.005367393006074334, 0.0008595547135404881, 0.9999852260198713, -0.017739927010989854]
+    - [1.000, 0.000, 0.000, -0.065]
+    - [0.000, 1.000, 0.000, -0.007]
+    - [0.000, 0.000, 1.000, -0.016]
     - [0.0, 0.0, 0.0, 1.0]
+  
+  # Transformation from this camera (cn) to the previous camera (cn-1) (updated from _p, representing stereo baseline)
+  # This matrix represents the transformation from cam0 (left) to cam1 (right) in a rectified setup.
   T_cn_cnm1:
-    - [0.9999978238338454, 0.00032423014342537217, 0.0020608741811117422, -0.09397410073693341]
-    - [-0.00032135073657469737, 0.9999989720658036, -0.0013973550168239824, -4.36282992379309e-05]
-    - [-0.002061325127286215, 0.0013966897125111987, 0.99999690009348, 0.0010315706607051294]
+    - [1.0, 0.0, 0.0, -0.0952] # Derived from right_p's Tx = -fx * baseline_x
+    - [0.0, 1.0, 0.0, 0.0]
+    - [0.0, 0.0, 1.0, 0.0]
     - [0.0, 0.0, 0.0, 1.0]
+  
+  # List of camera IDs this camera overlaps with (retained from original)
   cam_overlaps: [0]
+  
+  # Camera model type (retained from original)
   camera_model: pinhole
-  distortion_coeffs: [0.00415520544025779, -0.003951065114859482, -0.00042589527047545586, -0.00442085250772721]
+  
+  # Distortion coefficients (updated from _d)
+  distortion_coeffs: [0.0, 0.0, 0.0, 0.0, 0.0]
+  
+  # Distortion model (retained from original)
   distortion_model: radtan
-  intrinsics: [319.69438067702725, 320.1948319604044, 313.46161305104766, 180.7178241492703]
-  resolution: [640, 360]
-  rostopic: /camera/infra2/image_rect_raw
+  
+  # Intrinsic camera parameters (updated from _k)
+  intrinsics: [427.10791015625, 427.10791015625, 420.49163818359375, 239.6645050048828]
+  
+  # Image resolution (retained from original)
+  resolution: [640, 480]
+  
+  # ROS topic for this camera's rectified images (retained from original)
+  rostopic: /camera/right/image_rect
+  
+  # Time offset between camera and IMU measurements (retained from original)
   timeshift_cam_imu: 0.005012709485041032
 
 # cam0:

@@ -24,12 +24,20 @@
 
 #include <ceres/ceres.h>
 
+#if CERES_VERSION_MAJOR == 2 && CERES_VERSION_MINOR >= 2
+#include <ceres/manifold.h>
+#endif
+
 namespace ov_init {
 
 /**
  * @brief JPL quaternion CERES state parameterization
  */
+#if CERES_VERSION_MAJOR == 2 && CERES_VERSION_MINOR >= 2
 class State_JPLQuatLocal : public ceres::Manifold {
+#else
+class State_JPLQuatLocal : public ceres::LocalParameterization {
+#endif
 public:
   /**
    * @brief State update function for a JPL quaternion representation.
@@ -41,31 +49,41 @@ public:
    * \bar{q}=norm\Big(\begin{bmatrix} 0.5*\mathbf{\theta_{dx}} \\ 1 \end{bmatrix}\Big) \hat{\bar{q}}
    * @f]
    */
-  int AmbientSize() const override {
-    return 4; // For example, if this represents a 4D state (quaternion)
-}
+  bool Plus(const double *x, const double *delta, double *x_plus_delta) const override;
 
-int TangentSize() const override {
-    return 3; // Local perturbation size, typically 3 for a rotation
-}
+#if CERES_VERSION_MAJOR == 2 && CERES_VERSION_MINOR >= 2
 
-bool PlusJacobian(const double* x, double* jacobian) const override {
-    // Implement the jacobian computation for the Plus operation
-    return true;
-}
-bool Plus(const double* x, const double* delta, double* x_plus_delta) const override;
-bool ComputeJacobian(const double* x, double* jacobian) const;
+  bool PlusJacobian(const double *x, double *jacobian) const override;
 
+  // Inverse update: delta = Log(q2 ⊗ inv(q1))
+  bool Minus(const double *y, const double *x, double *delta) const override;
 
-bool Minus(const double* y, const double* x, double* delta) const override {
-    // Implement the minus operation
-    return true;
-}
+  // Jacobian of Minus
+  bool MinusJacobian(const double *x, double *jacobian) const override;
 
-bool MinusJacobian(const double* x, double* jacobian) const override {
-    // Implement the jacobian for the Minus operation
-    return true;
-}
+  int AmbientSize() const override { return 4; }
+  int TangentSize() const override { return 3; }
+
+#else
+
+  /**
+   * @brief Computes the jacobian in respect to the local parameterization
+   *
+   * This essentially "tricks" ceres.
+   * Instead of doing what ceres wants:
+   * dr/dlocal= dr/dglobal * dglobal/dlocal
+   *
+   * We instead directly do:
+   * dr/dlocal= [ dr/dlocal, 0] * [I; 0]= dr/dlocal.
+   * Therefore we here define dglobal/dlocal= [I; 0]
+   */
+  bool ComputeJacobian(const double *x, double *jacobian) const override;
+
+  int GlobalSize() const override { return 4; };
+
+  int LocalSize() const override { return 3; };
+
+#endif
 
 };
 

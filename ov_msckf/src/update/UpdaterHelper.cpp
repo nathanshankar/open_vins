@@ -371,16 +371,7 @@ void UpdaterHelper::get_feature_jacobian_full(std::shared_ptr<State> state, Upda
       dzn_dpfc << 1 / p_FinCi(2), 0, -p_FinCi(0) / (p_FinCi(2) * p_FinCi(2)), 0, 1 / p_FinCi(2), -p_FinCi(1) / (p_FinCi(2) * p_FinCi(2));
 
       // Derivative of p_FinCi in respect to p_FinIi
-      std::cout << "R_ItoC: " << R_ItoC.rows() << "x" << R_ItoC.cols() << std::endl;
-      std::cout << "R_GtoIi: " << R_GtoIi.rows() << "x" << R_GtoIi.cols() << std::endl;
-
-      std::cout << "R_ItoC matrix: " << std::endl << R_ItoC << std::endl;
-      std::cout << "R_GtoIi matrix: " << std::endl << R_GtoIi << std::endl;
-
-      Eigen::MatrixXd dpfc_dpfg(3, 3);
-      dpfc_dpfg.setZero();
-      dpfc_dpfg = R_ItoC * R_GtoIi;
-      std::cout<<"fixed"<<std::endl;
+      Eigen::MatrixXd dpfc_dpfg = R_ItoC * R_GtoIi;
 
       // Derivative of p_FinCi in respect to camera clone state
       Eigen::MatrixXd dpfc_dclone = Eigen::MatrixXd::Zero(3, 6);
